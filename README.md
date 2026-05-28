@@ -1,10 +1,10 @@
-# 📦 APP Reserva QR
+# APP Reserva QR
 
 Sistema de reserva inteligente de lockers mediante códigos QR, desarrollado con arquitectura limpia utilizando Flask, PostgreSQL y Flutter.
 
 ---
 
-# 🚀 Descripción del proyecto
+# Descripción del proyecto
 
 APP Reserva QR es una solución orientada a la gestión de casilleros inteligentes para instituciones educativas.
 
@@ -17,9 +17,7 @@ El sistema permite:
 * Registro de ingresos por validación QR.
 * Consumo de API REST desde aplicación móvil Flutter.
 
----
-
-# 🏗️ Arquitectura
+#  Arquitectura
 
 El backend fue desarrollado siguiendo principios de Clean Architecture.
 
@@ -42,9 +40,8 @@ backend/
     └── __init__.py
 ```
 
----
 
-# 🛠️ Tecnologías utilizadas
+#  Tecnologías utilizadas
 
 ## Backend
 
@@ -70,7 +67,7 @@ backend/
 
 ---
 
-# ⚙️ Configuración del proyecto
+# Configuración del proyecto
 
 ## 1. Clonar repositorio
 
@@ -129,9 +126,9 @@ http://127.0.0.1:5000
 
 ---
 
-# 📌 Endpoints implementados
+#  Endpoints implementados
 
-## 🔐 Autenticación
+##  Autenticación
 
 | Método | Endpoint                          |
 | ------ | --------------------------------- |
@@ -141,7 +138,7 @@ http://127.0.0.1:5000
 
 ---
 
-## 👤 Usuarios
+##  Usuarios
 
 | Método | Endpoint                       |
 | ------ | ------------------------------ |
@@ -150,7 +147,7 @@ http://127.0.0.1:5000
 
 ---
 
-## 🧳 Lockers
+##  Lockers
 
 | Método | Endpoint        |
 | ------ | --------------- |
@@ -159,7 +156,7 @@ http://127.0.0.1:5000
 
 ---
 
-## 📅 Reservas
+##  Reservas
 
 | Método | Endpoint                       |
 | ------ | ------------------------------ |
@@ -170,7 +167,7 @@ http://127.0.0.1:5000
 
 ---
 
-## 📱 QR e ingresos
+##  QR e ingresos
 
 | Método | Endpoint           |
 | ------ | ------------------ |
@@ -179,7 +176,7 @@ http://127.0.0.1:5000
 
 ---
 
-# 📲 Ejemplo de pruebas
+#  Ejemplo de pruebas
 
 ## Registro de usuario
 
@@ -230,7 +227,7 @@ POST /api/reservas/
 
 ---
 
-# 🗄️ Base de datos
+#  Base de datos
 
 La base de datos utilizada es PostgreSQL alojada en Neon.
 
@@ -243,7 +240,7 @@ Modelos principales:
 
 ---
 
-# 🔒 Seguridad
+#  Seguridad
 
 El proyecto incluye:
 
@@ -254,7 +251,7 @@ El proyecto incluye:
 
 ---
 
-# 📱 Aplicación móvil Flutter
+#  Aplicación móvil Flutter
 
 La carpeta `mobile/` contiene la aplicación Flutter encargada de consumir la API REST.
 
