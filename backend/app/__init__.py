@@ -19,7 +19,8 @@ def create_app(config_class=Config):
             reserva_routes,
             user_routes,
             qr_routes,
-            ia_routes
+            ia_routes,
+            reporte_routes
         )
 
         app.register_blueprint(auth_routes.bp)
@@ -28,6 +29,7 @@ def create_app(config_class=Config):
         app.register_blueprint(user_routes.bp)
         app.register_blueprint(qr_routes.bp)
         app.register_blueprint(ia_routes.bp)
+        app.register_blueprint(reporte_routes.bp)
 
         db.create_all()
 
