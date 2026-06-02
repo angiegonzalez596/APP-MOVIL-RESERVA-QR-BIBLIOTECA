@@ -5,6 +5,7 @@ from ...infrastructure.bd.models import Reserva, Locker, Usuario
 
 bp = Blueprint('reservas', __name__, url_prefix='/api/reservas')
 
+# Rutas para gestionar reservas de lockers
 @bp.route('/', methods=['GET'])
 def get_reservas():
     reservas = Reserva.query.all()
@@ -24,7 +25,7 @@ def get_reservas():
 
     return jsonify(result), 200
 
-
+# Ruta para crear una nueva reserva
 @bp.route('/', methods=['POST'])
 def create_reserva():
     data = request.get_json()
@@ -77,6 +78,7 @@ def create_reserva():
         }
     }), 201
 
+# reservas de un usuario específico
 @bp.route('/<int:user_id>', methods=['GET'])
 def get_reservas_by_user(user_id):
     reservas = Reserva.query.filter_by(usuario_id=user_id).all()
@@ -96,6 +98,7 @@ def get_reservas_by_user(user_id):
 
     return jsonify(result), 200
 
+# Ruta para finalizar una reserva
 @bp.route('/<int:id>/finalizar', methods=['PUT'])
 def finalizar_reserva(id):
     reserva = Reserva.query.get(id)

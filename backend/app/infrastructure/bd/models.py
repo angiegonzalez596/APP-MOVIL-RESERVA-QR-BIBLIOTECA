@@ -43,3 +43,14 @@ class Ingreso(db.Model):
     
     # Relationships for clarification
     vigilante = db.relationship('Usuario', foreign_keys=[vigilante_id], backref='ingresos_supervisados')
+
+class ConsultaIA(db.Model):
+    __tablename__ = 'consulta_ia'
+
+    id = db.Column(db.Integer, primary_key=True)
+    usuario_id = db.Column(db.Integer, db.ForeignKey('usuario.id'), nullable=True)
+    pregunta = db.Column(db.Text, nullable=False)
+    respuesta = db.Column(db.Text, nullable=False)
+    fecha = db.Column(db.DateTime, default=datetime.utcnow)
+
+    usuario = db.relationship('Usuario', backref='consultas_ia')

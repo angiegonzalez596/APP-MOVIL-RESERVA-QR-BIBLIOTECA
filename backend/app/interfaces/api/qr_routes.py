@@ -5,7 +5,7 @@ from ...infrastructure.bd.models import Usuario, Ingreso
 
 bp = Blueprint('qr', __name__, url_prefix='/api/qr')
 
-
+#generar QR para un usuario
 @bp.route('/generate', methods=['POST'])
 def generate_qr():
     data = request.get_json()

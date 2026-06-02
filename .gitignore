@@ -1,5 +1,21 @@
-venv/
+# Python
 __pycache__/
 *.pyc
+.venv/
+venv/
 .env
-db.sqlite3
+
+# Flask / local DB
+instance/
+*.db
+
+# Flutter
+frontend/mobile/.dart_tool/
+frontend/mobile/build/
+frontend/mobile/.idea/
+frontend/mobile/.metadata
+frontend/mobile/pubspec.lock
+
+# OS / IDE
+.vscode/
+.DS_Store

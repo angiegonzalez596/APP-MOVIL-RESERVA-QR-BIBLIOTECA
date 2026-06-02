@@ -3,7 +3,7 @@ from ...infrastructure.bd.models import Usuario
 
 bp = Blueprint('users', __name__, url_prefix='/api/users')
 
-
+# Rutas para gestionar usuarios
 @bp.route('/profile', methods=['GET'])
 def get_profile():
     user_id = request.args.get("user_id")
@@ -26,7 +26,7 @@ def get_profile():
         "estado": usuario.estado
     }), 200
 
-
+#usuario por su ID
 @bp.route('/<int:id>', methods=['GET'])
 def get_user_by_id(id):
     usuario = Usuario.query.get(id)

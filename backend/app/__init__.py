@@ -1,6 +1,10 @@
 from flask import Flask
+from dotenv import load_dotenv
+
 from .config import Config
 from .extensions import db
+
+load_dotenv()
 
 def create_app(config_class=Config):
     app = Flask(__name__)
@@ -14,7 +18,8 @@ def create_app(config_class=Config):
             locker_routes,
             reserva_routes,
             user_routes,
-            qr_routes
+            qr_routes,
+            ia_routes
         )
 
         app.register_blueprint(auth_routes.bp)
@@ -22,28 +27,14 @@ def create_app(config_class=Config):
         app.register_blueprint(reserva_routes.bp)
         app.register_blueprint(user_routes.bp)
         app.register_blueprint(qr_routes.bp)
+        app.register_blueprint(ia_routes.bp)
 
         db.create_all()
 
     @app.route("/", methods=["GET"])
     def home():
         return {
-            "message": "API Reserva QR funcionando",
-            "endpoints": [
-                "POST /api/auth/register",
-                "POST /api/auth/login",
-                "POST /api/auth/generate-qr/<user_id>",
-                "GET /api/lockers/",
-                "POST /api/lockers/",
-                "GET /api/reservas/",
-                "POST /api/reservas/",
-                "GET /api/reservas/<user_id>",
-                "PUT /api/reservas/<id>/finalizar",
-                "GET /api/users/profile?user_id=1",
-                "GET /api/users/<id>",
-                "POST /api/qr/generate",
-                "POST /api/qr/scan"
-            ]
+            "message": "API Reserva QR funcionando"
         }, 200
 
     return app

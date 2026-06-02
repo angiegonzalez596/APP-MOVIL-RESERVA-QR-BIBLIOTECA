@@ -6,11 +6,13 @@ from ...use_cases.generate_qr import GenerateQR
 bp = Blueprint('auth', __name__, url_prefix='/api/auth')
 
 # Endpoint para generar QR de acceso
+
 @bp.route('/generate-qr/<int:user_id>', methods=['POST'])
 def generate_qr(user_id):
     use_case = GenerateQR()
     result, status_code = use_case.execute(user_id)
     return jsonify(result), status_code
+
 
 # Registro de usuario
 @bp.route('/register', methods=['POST'])
