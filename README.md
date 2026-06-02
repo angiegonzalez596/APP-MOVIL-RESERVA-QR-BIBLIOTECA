@@ -1,124 +1,132 @@
-# APP Reserva QR
+# APP RESERVA QR
 
-Sistema de reserva inteligente de lockers mediante códigos QR, desarrollado con arquitectura limpia utilizando Flask, PostgreSQL y Flutter.
+## Descripción General
+
+APP Reserva QR es una solución para la gestión de casilleros inteligentes mediante códigos QR. El sistema permite a los usuarios consultar lockers disponibles, realizar reservas, generar códigos QR asociados a sus reservas y validar el acceso mediante escaneo.
+
+El proyecto está compuesto por un backend desarrollado en Flask y una aplicación móvil desarrollada en Flutter, utilizando PostgreSQL como base de datos alojada en Neon.
 
 ---
 
-# Descripción del proyecto
+# Arquitectura del Proyecto
 
-APP Reserva QR es una solución orientada a la gestión de casilleros inteligentes para instituciones educativas.
-
-El sistema permite:
-
-* Registro e inicio de sesión de usuarios.
-* Gestión de lockers.
-* Creación y finalización de reservas.
-* Generación y escaneo de códigos QR.
-* Registro de ingresos por validación QR.
-* Consumo de API REST desde aplicación móvil Flutter.
-
-#  Arquitectura
-
-El backend fue desarrollado siguiendo principios de Clean Architecture.
-
-## Estructura del backend
+La solución se encuentra organizada en dos componentes principales:
 
 ```text
-backend/
-└── app/
-    ├── domain/
-    │   └── entities/
-    ├── infrastructure/
-    │   ├── bd/
-    │   ├── qr/
-    │   └── security/
-    ├── interfaces/
-    │   └── api/
-    ├── use_cases/
-    ├── config.py
-    ├── extensions.py
-    └── __init__.py
+APP RESERVA QR/
+│
+├── backend/
+│   ├── app/
+│   │   ├── domain/
+│   │   │   └── entities/
+│   │   ├── infrastructure/
+│   │   │   ├── bd/
+│   │   │   ├── qr/
+│   │   │   └── security/
+│   │   ├── interfaces/
+│   │   │   └── api/
+│   │   ├── use_cases/
+│   │   ├── config.py
+│   │   ├── extensions.py
+│   │   └── __init__.py
+│   │
+│   ├── .env
+│   ├── requirements.txt
+│   └── run.py
+│
+├── frontend/
+│   └── mobile/
+│       ├── android/
+│       ├── ios/
+│       ├── lib/
+│       ├── test/
+│       └── pubspec.yaml
+│
+├── docs/
+├── .gitignore
+└── README.md
 ```
 
+---
 
-#  Tecnologías utilizadas
+# Tecnologías Utilizadas
 
 ## Backend
 
 * Python 3.12
 * Flask
-* SQLAlchemy
+* Flask SQLAlchemy
 * PostgreSQL
 * Neon Database
-* JWT
 * bcrypt
+* QRCode
+* Pillow
 
-## Frontend móvil
+## Frontend
 
 * Flutter
 * Dart
 
-## Herramientas
+## Herramientas de Desarrollo
 
 * Git
 * GitHub
-* Thunder Client / Postman
-* VS Code
+* Visual Studio Code
+* Postman
+* Thunder Client
 
 ---
 
-# Configuración del proyecto
+# Configuración del Backend
 
-## 1. Clonar repositorio
+## 1. Clonar el repositorio
 
 ```bash
 git clone <URL_DEL_REPOSITORIO>
 ```
 
----
-
-## 2. Crear entorno virtual
+## 2. Ingresar al backend
 
 ```bash
-python -m venv venv
+cd backend
 ```
 
-Activar entorno virtual:
-
-### Windows
+## 3. Crear entorno virtual
 
 ```bash
-venv\Scripts\activate
+py -3.12 -m venv .venv
 ```
 
----
+## 4. Activar entorno virtual
 
-## 3. Instalar dependencias
+### Windows PowerShell
+
+```bash
+.\.venv\Scripts\Activate.ps1
+```
+
+## 5. Instalar dependencias
 
 ```bash
 pip install -r requirements.txt
 ```
 
----
+## 6. Crear archivo .env
 
-## 4. Configurar variables de entorno
-
-Crear archivo `.env`
+Crear un archivo denominado `.env` dentro de la carpeta backend:
 
 ```env
-DATABASE_URL=postgresql://usuario:password@host/database
+DATABASE_URL=postgresql+psycopg://usuario:password@host/database
 SECRET_KEY=clave_segura
 ```
 
----
-
-## 5. Ejecutar backend
+## 7. Ejecutar la aplicación
 
 ```bash
 python run.py
 ```
 
-Servidor:
+La API quedará disponible en:
 
 ```text
 http://127.0.0.1:5000
@@ -126,147 +134,104 @@ http://127.0.0.1:5000
 
 ---
 
-#  Endpoints implementados
+# Configuración del Frontend
 
-##  Autenticación
+## 1. Ingresar al proyecto Flutter
 
-| Método | Endpoint                          |
-| ------ | --------------------------------- |
-| POST   | `/api/auth/register`              |
-| POST   | `/api/auth/login`                 |
-| POST   | `/api/auth/generate-qr/<user_id>` |
+```bash
+cd frontend/mobile
+```
 
----
+## 2. Descargar dependencias
 
-##  Usuarios
+```bash
+flutter pub get
+```
 
-| Método | Endpoint                       |
-| ------ | ------------------------------ |
-| GET    | `/api/users/profile?user_id=1` |
-| GET    | `/api/users/<id>`              |
+## 3. Ejecutar la aplicación
 
----
-
-##  Lockers
-
-| Método | Endpoint        |
-| ------ | --------------- |
-| GET    | `/api/lockers/` |
-| POST   | `/api/lockers/` |
+```bash
+flutter run
+```
 
 ---
 
-##  Reservas
+# Endpoints Disponibles
 
-| Método | Endpoint                       |
-| ------ | ------------------------------ |
-| GET    | `/api/reservas/`               |
-| POST   | `/api/reservas/`               |
-| GET    | `/api/reservas/<user_id>`      |
-| PUT    | `/api/reservas/<id>/finalizar` |
+## Autenticación
 
----
+| Método | Endpoint                        |
+| ------ | ------------------------------- |
+| POST   | /api/auth/register              |
+| POST   | /api/auth/login                 |
+| POST   | /api/auth/generate-qr/<user_id> |
 
-##  QR e ingresos
+## Usuarios
 
 | Método | Endpoint           |
 | ------ | ------------------ |
-| POST   | `/api/qr/generate` |
-| POST   | `/api/qr/scan`     |
+| GET    | /api/users/profile |
+| GET    | /api/users/<id>    |
+
+## Lockers
+
+| Método | Endpoint      |
+| ------ | ------------- |
+| GET    | /api/lockers/ |
+| POST   | /api/lockers/ |
+
+## Reservas
+
+| Método | Endpoint                     |
+| ------ | ---------------------------- |
+| GET    | /api/reservas/               |
+| POST   | /api/reservas/               |
+| GET    | /api/reservas/<user_id>      |
+| PUT    | /api/reservas/<id>/finalizar |
+
+## QR
+
+| Método | Endpoint         |
+| ------ | ---------------- |
+| POST   | /api/qr/generate |
+| POST   | /api/qr/scan     |
 
 ---
 
-#  Ejemplo de pruebas
+# Modelo de Datos
 
-## Registro de usuario
-
-```http
-POST /api/auth/register
-```
-
-```json
-{
-  "nombre": "Ronald",
-  "email": "ronald@test.com",
-  "password": "123456",
-  "documento": "123456789",
-  "codigo_estudiante": "EST001",
-  "rol": "ESTUDIANTE"
-}
-```
-
----
-
-## Crear locker
-
-```http
-POST /api/lockers/
-```
-
-```json
-{
-  "numero": 101,
-  "estado": "DISPONIBLE"
-}
-```
-
----
-
-## Crear reserva
-
-```http
-POST /api/reservas/
-```
-
-```json
-{
-  "usuario_id": 1,
-  "locker_id": 1
-}
-```
-
----
-
-#  Base de datos
-
-La base de datos utilizada es PostgreSQL alojada en Neon.
-
-Modelos principales:
+El sistema se basa en las siguientes entidades principales:
 
 * Usuario
 * Locker
 * Reserva
-* Ingreso
+* Registro QR
+
+Estas entidades permiten gestionar la asignación temporal de lockers y la validación de acceso mediante códigos QR.
 
 ---
 
-#  Seguridad
+# Estado Actual del Proyecto
 
-El proyecto incluye:
+Actualmente se encuentra implementado:
 
-* Hash de contraseñas con bcrypt.
-* Uso de JWT para autenticación.
-* Validaciones de reservas activas.
-* Control de lockers ocupados.
+* Estructura base del backend.
+* Integración con PostgreSQL Neon.
+* API REST funcional.
+* Gestión de usuarios.
+* Gestión de lockers.
+* Gestión de reservas.
+* Generación y validación de códigos QR.
 
----
+Pendiente por implementar:
 
-#  Aplicación móvil Flutter
-
-La carpeta `mobile/` contiene la aplicación Flutter encargada de consumir la API REST.
-
-Funcionalidades previstas:
-
-* Login móvil.
-* Visualización de lockers.
-* Reserva de lockers.
-* Visualización de QR.
-* Escaneo QR.
+* Integración completa con Flutter.
+* Mejoras de autenticación y autorización.
+* Validaciones avanzadas de negocio.
+* Optimización de experiencia de usuario móvil.
 
 ---
 
-# 👨‍💻 Autores
+# Equipo de Desarrollo
 
-Proyecto académico desarrollado para la gestión de reservas de lockers mediante QR.
-
-Desarrollado con Flask + PostgreSQL + Flutter.
+Proyecto académico para la gestión inteligente de lockers mediante códigos QR utilizando Flask, PostgreSQL y Flutter.
