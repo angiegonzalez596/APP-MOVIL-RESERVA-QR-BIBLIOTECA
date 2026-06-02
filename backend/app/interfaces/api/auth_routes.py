@@ -17,18 +17,30 @@ def generate_qr(user_id):
 # Registro de usuario
 @bp.route('/register', methods=['POST'])
 def register():
-    data = request.get_json()
-    
-    # Validaciones
+    data = request.get_json() or {}
+
+    rol = data.get("rol", "ESTUDIANTE").upper()
+    data["rol"] = rol
+
     required_fields = ['nombre', 'email', 'password', 'documento']
+
     for field in required_fields:
         if not data.get(field):
             return jsonify({"error": f"El campo {field} es obligatorio"}), 400
 
+    if rol == "ESTUDIANTE" and not data.get("codigo_estudiante"):
+        return jsonify({
+            "error": "El campo codigo_estudiante es obligatorio para estudiantes"
+        }), 400
+
+    if rol == "VIGILANTE":
+        data["codigo_estudiante"] = None
+
     use_case = RegisterUser()
     result, status_code = use_case.execute(data)
-    
+
     return jsonify(result), status_code
+
 
 # Login de usuario
 @bp.route('/login', methods=['POST'])
