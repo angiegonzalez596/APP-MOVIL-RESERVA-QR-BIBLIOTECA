@@ -19,26 +19,26 @@ class Usuario(db.Model):
 class Locker(db.Model):
     __tablename__ = 'locker'
     id = db.Column(db.Integer, primary_key=True)
-    numero = db.Column(db.Integer)
-    estado = db.Column(db.String(20))
+    numero = db.Column(db.Integer, nullable=False)
+    estado = db.Column(db.String(20), default="disponible") # disponible o ocupado
     
     reservas = db.relationship('Reserva', backref='locker', lazy=True)
 
 class Reserva(db.Model):
     __tablename__ = 'reserva'
     id = db.Column(db.Integer, primary_key=True)
-    usuario_id = db.Column(db.Integer, db.ForeignKey('usuario.id'))
-    locker_id = db.Column(db.Integer, db.ForeignKey('locker.id'))
-    fecha_inicio = db.Column(db.DateTime)
-    fecha_fin = db.Column(db.DateTime)
-    estado = db.Column(db.String(20))
+    usuario_id = db.Column(db.Integer, db.ForeignKey('usuario.id'), nullable=False) # 💡 OPTIMIZADO: No puede ser nulo
+    locker_id = db.Column(db.Integer, db.ForeignKey('locker.id'), nullable=False)   # 💡 OPTIMIZADO: No puede ser nulo
+    fecha_inicio = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)   # 💡 OPTIMIZADO: Fecha automática al crear
+    fecha_fin = db.Column(db.DateTime, nullable=True) # Es nulo hasta que se finaliza la reserva
+    estado = db.Column(db.String(20), default="activa") # 💡 OPTIMIZADO: "activa" o "finalizada"
 
 class Ingreso(db.Model):
     __tablename__ = 'ingreso'
     id = db.Column(db.Integer, primary_key=True)
     usuario_id = db.Column(db.Integer, db.ForeignKey('usuario.id'))
     vigilante_id = db.Column(db.Integer, db.ForeignKey('usuario.id'))
-    fecha_ingreso = db.Column(db.DateTime)
+    fecha_ingreso = db.Column(db.DateTime, default=datetime.utcnow)
     fecha_salida = db.Column(db.DateTime)
     
     # Relationships for clarification

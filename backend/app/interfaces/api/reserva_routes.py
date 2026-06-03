@@ -18,7 +18,7 @@ def get_reservas():
             "locker_id": reserva.locker_id,
             "fecha_inicio": reserva.fecha_inicio.isoformat() if reserva.fecha_inicio else None,
             "fecha_fin": reserva.fecha_fin.isoformat() if reserva.fecha_fin else None,
-            "estado": reserva.estado,
+            "estado": reserva.estado, # ✅ Sincronizado
             "usuario": reserva.usuario.nombre if reserva.usuario else None,
             "locker": reserva.locker.numero if reserva.locker else None
         })
@@ -28,7 +28,7 @@ def get_reservas():
 # Ruta para crear una nueva reserva
 @bp.route('/', methods=['POST'])
 def create_reserva():
-    data = request.get_json()
+    data = request.get_json() or {}
 
     usuario_id = data.get("usuario_id")
     locker_id = data.get("locker_id")
@@ -44,25 +44,28 @@ def create_reserva():
     if not locker:
         return jsonify({"error": "Locker no encontrado"}), 404
 
-    if locker.estado == "OCUPADO":
+    # Comparar estado en minúsculas
+    if locker.estado == "ocupado":
         return jsonify({"error": "El locker ya está ocupado"}), 400
 
+    # ✅ CORREGIDO: Se cambió 'estado_reserva' por 'estado'
     reserva_activa = Reserva.query.filter_by(
         usuario_id=usuario_id,
-        estado="ACTIVA"
+        estado="activa"
     ).first()
 
     if reserva_activa:
         return jsonify({"error": "El usuario ya tiene una reserva activa"}), 400
 
+    # ✅ CORREGIDO: Instancia con el atributo 'estado'
     reserva = Reserva(
         usuario_id=usuario_id,
         locker_id=locker_id,
         fecha_inicio=datetime.utcnow(),
-        estado="ACTIVA"
+        estado="activa" 
     )
 
-    locker.estado = "OCUPADO"
+    locker.estado = "ocupado" 
 
     db.session.add(reserva)
     db.session.commit()
@@ -74,12 +77,12 @@ def create_reserva():
             "usuario_id": reserva.usuario_id,
             "locker_id": reserva.locker_id,
             "fecha_inicio": reserva.fecha_inicio.isoformat(),
-            "estado": reserva.estado
+            "estado": reserva.estado # ✅ Sincronizado
         }
     }), 201
 
 # reservas de un usuario específico
-@bp.route('/<int:user_id>', methods=['GET'])
+@bp.route('/usuario/<int:user_id>', methods=['GET'])
 def get_reservas_by_user(user_id):
     reservas = Reserva.query.filter_by(usuario_id=user_id).all()
 
@@ -91,7 +94,7 @@ def get_reservas_by_user(user_id):
             "locker_id": reserva.locker_id,
             "fecha_inicio": reserva.fecha_inicio.isoformat() if reserva.fecha_inicio else None,
             "fecha_fin": reserva.fecha_fin.isoformat() if reserva.fecha_fin else None,
-            "estado": reserva.estado,
+            "estado": reserva.estado, # ✅ Sincronizado
             "usuario": reserva.usuario.nombre if reserva.usuario else None,
             "locker": reserva.locker.numero if reserva.locker else None
         })
@@ -106,15 +109,16 @@ def finalizar_reserva(id):
     if not reserva:
         return jsonify({"error": "Reserva no encontrada"}), 404
 
-    if reserva.estado != "ACTIVA":
+    # ✅ CORREGIDO: Se cambió 'estado_reserva' por 'estado'
+    if reserva.estado != "activa":
         return jsonify({"error": "Solo se pueden finalizar reservas activas"}), 400
 
-    reserva.estado = "FINALIZADA"
+    reserva.estado = "finalizada" # ✅ Sincronizado
     reserva.fecha_fin = datetime.utcnow()
 
     locker = Locker.query.get(reserva.locker_id)
     if locker:
-        locker.estado = "DISPONIBLE"
+        locker.estado = "disponible" 
 
     db.session.commit()
 
@@ -126,6 +130,6 @@ def finalizar_reserva(id):
             "locker_id": reserva.locker_id,
             "fecha_inicio": reserva.fecha_inicio.isoformat() if reserva.fecha_inicio else None,
             "fecha_fin": reserva.fecha_fin.isoformat() if reserva.fecha_fin else None,
-            "estado": reserva.estado
+            "estado": reserva.estado # ✅ Sincronizado
         }
     }), 200
