@@ -3,11 +3,17 @@ from dotenv import load_dotenv
 
 from .config import Config
 from .extensions import db
+from flask_cors import CORS
 
 load_dotenv()
 
 def create_app(config_class=Config):
     app = Flask(__name__)
+    
+    CORS(
+        app,
+        resources={r"/api/*": {"origins": "*"}}
+    )
     app.config.from_object(config_class)
 
     db.init_app(app)
