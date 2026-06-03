@@ -64,10 +64,10 @@ class _HomeScreenState extends State<HomeScreen> {
             Center(
               child: Opacity(
                 opacity: 0.05,
-                child: SvgPicture.network(
-                  'https://www.unilibre.edu.co/wp-content/uploads/2024/11/Universidad-Libre.svg',
+                child: Image.asset(
+                  'assets/images/logo_unilibre.png',
                   width: MediaQuery.of(context).size.width * 0.8,
-                  placeholderBuilder: (context) => const SizedBox(),
+                  fit: BoxFit.contain,
                 ),
               ),
             ),
@@ -78,14 +78,10 @@ class _HomeScreenState extends State<HomeScreen> {
                 children: [
                   // Logo de marca en la parte superior
                   Center(
-                    child: SvgPicture.network(
-                      'https://www.unilibre.edu.co/wp-content/uploads/2024/11/Universidad-Libre.svg',
+                    child: Image.asset(
+                      'assets/images/logo_unilibre.png',
                       height: 60,
-                      placeholderBuilder: (context) => const SizedBox(
-                        height: 60,
-                        width: 60,
-                        child: CircularProgressIndicator(strokeWidth: 2),
-                      ),
+                      fit: BoxFit.contain,
                     ),
                   ),
                   const SizedBox(height: 20),

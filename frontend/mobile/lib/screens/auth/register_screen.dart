@@ -83,14 +83,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(15),
                   ),
-                  child: SvgPicture.network(
-                    'https://www.unilibre.edu.co/wp-content/uploads/2024/11/Universidad-Libre.svg',
+                  child: Image.asset(
+                    'assets/images/logo_unilibre.png',
                     height: 60,
-                    placeholderBuilder: (BuildContext context) => const SizedBox(
-                      height: 60,
-                      width: 60,
-                      child: CircularProgressIndicator(strokeWidth: 2),
-                    ),
+                    fit: BoxFit.contain,
                   ),
                 ),
               ),

@@ -3,7 +3,7 @@ import 'package:http/http.dart' as http;
 import 'api_config.dart';
 
 class ReservaService {
-  static const String baseUrl = ApiConfig.baseUrl;
+  static String get baseUrl => ApiConfig.baseUrl;
 
   // Registrar ingreso
   static Future<bool> registrarIngreso(

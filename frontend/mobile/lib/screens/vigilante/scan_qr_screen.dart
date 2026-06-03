@@ -49,13 +49,10 @@ class _ScanQrScreenState extends State<ScanQrScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             // Logo
-            const Text(
-              "AccessBook",
-              style: TextStyle(
-                fontSize: 28,
-                fontWeight: FontWeight.bold,
-                color: Colors.blue,
-              ),
+            Image.asset(
+              'assets/images/logo_unilibre.png',
+              height: 80,
+              fit: BoxFit.contain,
             ),
             const SizedBox(height: 20),
 

@@ -17,18 +17,9 @@ class VigilanteMenuScreen extends StatelessWidget {
               children: [
                 // Logo de AccessBook
                 Image.asset(
-                  'assets/logo.png',
+                  'assets/images/logo_unilibre.png',
                   height: 80,
-                  errorBuilder: (context, error, stackTrace) {
-                    return const Text(
-                      "AccessBook",
-                      style: TextStyle(
-                        fontSize: 32,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.blue,
-                      ),
-                    );
-                  },
+                  fit: BoxFit.contain,
                 ),
                 const SizedBox(height: 60),
 

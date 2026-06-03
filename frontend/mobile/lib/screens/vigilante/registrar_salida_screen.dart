@@ -127,13 +127,10 @@ class _RegistrarSalidaScreenState extends State<RegistrarSalidaScreen> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Text(
-                "AccessBook",
-                style: TextStyle(
-                  fontSize: 28,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.blue,
-                ),
+              Image.asset(
+                'assets/images/logo_unilibre.png',
+                height: 80,
+                fit: BoxFit.contain,
               ),
               const SizedBox(height: 40),
               const Text(
