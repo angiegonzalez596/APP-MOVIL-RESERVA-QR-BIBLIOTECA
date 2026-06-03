@@ -72,6 +72,9 @@ Da recomendaciones prácticas para la administración de lockers.
 
         respuesta = response.text.strip()
 
+        respuesta = respuesta.replace("**", "")
+        respuesta = respuesta.replace("* ", "• ")
+
         consulta = ConsultaIA(
             usuario_id=usuario_id,
             pregunta=pregunta,
