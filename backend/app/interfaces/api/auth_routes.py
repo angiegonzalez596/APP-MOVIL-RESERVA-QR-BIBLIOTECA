@@ -1,6 +1,6 @@
 from flask import Blueprint, request, jsonify
 from ...use_cases.register_user import RegisterUser
-
+from ...use_cases.login_user import LoginUser
 from ...use_cases.generate_qr import GenerateQR
 
 bp = Blueprint('auth', __name__, url_prefix='/api/auth')
@@ -45,7 +45,7 @@ def register():
 # Login de usuario
 @bp.route('/login', methods=['POST'])
 def login():
-    data = request.get_json()
+    data = request.get_json() or {}
 
     email = data.get("email")
     password = data.get("password")
@@ -53,9 +53,7 @@ def login():
     if not email or not password:
         return jsonify({"error": "Email y password son obligatorios"}), 400
 
-    return jsonify({
-        "message": "Login exitoso",
-        "usuario": {
-            "email": email
-        }
-    }), 200
+    use_case = LoginUser()
+    result, status_code = use_case.execute(email, password)
+
+    return jsonify(result), status_code
