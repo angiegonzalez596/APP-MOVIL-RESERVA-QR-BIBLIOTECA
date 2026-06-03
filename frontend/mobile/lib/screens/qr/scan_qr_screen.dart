@@ -25,7 +25,7 @@ class _ScanQrScreenState extends State<ScanQrScreen> {
     });
 
     try {
-      final response = await service.validarQr(
+      final response = await service.scanQr(
         qrController.text,
         3, // vigilante creado anteriormente
       );
