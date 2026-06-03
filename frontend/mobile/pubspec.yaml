@@ -30,13 +30,16 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  qr_flutter: ^4.1.0  # Para pintar el QR en el Frame 8
+ 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   mobile_scanner: ^5.1.1
   cupertino_icons: ^1.0.8
   http: ^1.6.0
   flutter_markdown: ^0.7.7+1
+  shared_preferences: ^2.3.5
+  qr_flutter: ^4.1.0
+
 
 dev_dependencies:
   flutter_test:
