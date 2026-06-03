@@ -1,9 +1,9 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import '../../services/api_config.dart';
 
 class LockerService {
-  // 💡 Recuerda colocar la IP de tu máquina aquí
-  static const String baseUrl = 'http://192.168.1.X:5000/api/lockers';
+  static final String baseUrl = '${ApiConfig.baseUrl}/lockers';
 
   // Función para traer únicamente los casilleros libres de la base de datos
   static Future<List<dynamic>> obtenerDisponibles() async {

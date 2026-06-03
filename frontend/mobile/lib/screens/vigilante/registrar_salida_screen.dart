@@ -150,15 +150,13 @@ class _RegistrarSalidaScreenState extends State<RegistrarSalidaScreen> {
               // ⌨️ CAMPO DE TEXTO GRIS (Figma)
               TextField(
                 controller: _lockerController,
-                keyboardType: TextInputType
-                    .number, // 👈 Deja esto solo para el teclado numérico
-                textAlign: TextAlign
-                    .center, // 👈 Este es el que centra el texto en pantalla
+                keyboardType: TextInputType.number,
+                textAlign: TextAlign.center,
+                style: const TextStyle(color: Colors.black, fontSize: 18, fontWeight: FontWeight.bold),
                 decoration: InputDecoration(
                   filled: true,
-                  fillColor: const Color(
-                    0xFFD9D9D9,
-                  ), // El gris exacto de tu diseño
+                  fillColor: const Color(0xFFD9D9D9),
+                  hintText: '000',
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(5),
                     borderSide: BorderSide.none,

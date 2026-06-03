@@ -1,17 +1,25 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
+import 'api_config.dart';
 
 class IaService {
-  static const String baseUrl = 'http://127.0.0.1:5000';
+  final String baseUrl = ApiConfig.baseUrl;
 
   Future<Map<String, dynamic>> consultarIA(String pregunta) async {
+    final prefs = await SharedPreferences.getInstance();
+    final int? userId = prefs.getInt('user_id');
+
     final response = await http.post(
-      Uri.parse('$baseUrl/api/ia/recomendacion'),
+      Uri.parse('$baseUrl/ia/recomendacion'),
       headers: {'Content-Type': 'application/json'},
-      body: jsonEncode({'usuario_id': 1, 'pregunta': pregunta}),
+      body: jsonEncode({
+        'usuario_id': userId ?? 0,
+        'pregunta': pregunta,
+      }),
     );
 
-    if (response.statusCode == 201) {
+    if (response.statusCode == 201 || response.statusCode == 200) {
       return jsonDecode(response.body);
     }
 

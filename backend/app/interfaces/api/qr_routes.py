@@ -22,7 +22,7 @@ def generate_qr():
 
     reserva = Reserva.query.filter_by(
         usuario_id=usuario.id,
-        estado="ACTIVA"
+        estado="activa"
     ).first()
 
     if not reserva:
@@ -99,7 +99,7 @@ def scan_qr():
 
     reserva = Reserva.query.filter_by(
         usuario_id=usuario.id,
-        estado="ACTIVA"
+        estado="activa"
     ).first()
 
     if not reserva:

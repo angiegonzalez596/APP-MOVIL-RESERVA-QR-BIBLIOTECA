@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 import '../ia/ia_screen.dart';
 import '../qr/scan_qr_screen.dart';
 import '../qr/qr_display_screen.dart';
+import '../qr/entregar_locker_screen.dart';
 import '../reportes/reportes_screen.dart';
 import 'profile_screen.dart';
 
@@ -34,7 +36,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Reserva QR'),
+        title: const Text('Unilibre Reserva QR'),
         centerTitle: true,
         actions: [
           IconButton(
@@ -48,44 +50,120 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ],
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(20),
-        child: Column(
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [const Color(0xFFC62828).withOpacity(0.05), Colors.white],
+          ),
+        ),
+        child: Stack(
           children: [
-            const SizedBox(height: 20),
-            
-            if (_rol == 'ESTUDIANTE')
-              _menuCard(
-                context,
-                icon: Icons.qr_code,
-                titulo: 'Mi Código QR',
-                pantalla: const QrDisplayScreen(),
+            // Logo de fondo con opacidad muy baja
+            Center(
+              child: Opacity(
+                opacity: 0.05,
+                child: SvgPicture.network(
+                  'https://www.unilibre.edu.co/wp-content/uploads/2024/11/Universidad-Libre.svg',
+                  width: MediaQuery.of(context).size.width * 0.8,
+                  placeholderBuilder: (context) => const SizedBox(),
+                ),
               ),
-
-            if (_rol == 'VIGILANTE')
-              _menuCard(
-                context,
-                icon: Icons.qr_code_scanner,
-                titulo: 'Escanear QR',
-                pantalla: const ScanQrScreen(),
-              ),
-
-            const SizedBox(height: 16),
-
-            _menuCard(
-              context,
-              icon: Icons.smart_toy,
-              titulo: 'Asistente IA',
-              pantalla: const IaScreen(),
             ),
+            Padding(
+              padding: const EdgeInsets.all(20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Logo de marca en la parte superior
+                  Center(
+                    child: SvgPicture.network(
+                      'https://www.unilibre.edu.co/wp-content/uploads/2024/11/Universidad-Libre.svg',
+                      height: 60,
+                      placeholderBuilder: (context) => const SizedBox(
+                        height: 60,
+                        width: 60,
+                        child: CircularProgressIndicator(strokeWidth: 2),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  const Text(
+                    'Servicios Disponibles',
+                    style: TextStyle(
+                      fontSize: 22,
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xFFC62828),
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  
+                  if (_rol == 'ESTUDIANTE') ...[
+                    _menuCard(
+                      context,
+                      icon: Icons.qr_code,
+                      titulo: 'Mi Código QR de Reserva',
+                      subtitulo: 'Muestra este código para ingresar',
+                      pantalla: const QrDisplayScreen(),
+                    ),
+                    const SizedBox(height: 16),
+                    _menuCard(
+                      context,
+                      icon: Icons.vpn_key_outlined,
+                      titulo: 'Abrir y Entregar Locker',
+                      subtitulo: 'Escanea el QR del locker para retirar tus cosas',
+                      pantalla: const EntregarLockerScreen(),
+                    ),
+                  ],
 
-            const SizedBox(height: 16),
+                  if (_rol == 'VIGILANTE')
+                    _menuCard(
+                      context,
+                      icon: Icons.qr_code_scanner,
+                      titulo: 'Escanear Código QR',
+                      subtitulo: 'Validar acceso a lockers',
+                      pantalla: const ScanQrScreen(),
+                    ),
 
-            _menuCard(
-              context,
-              icon: Icons.bar_chart,
-              titulo: 'Reportes',
-              pantalla: const ReportesScreen(),
+                  if (_rol == 'ADMIN')
+                    Padding(
+                      padding: const EdgeInsets.only(top: 16),
+                      child: _menuCard(
+                        context,
+                        icon: Icons.bar_chart,
+                        titulo: 'Panel de Administración',
+                        subtitulo: 'Reportes y estadísticas de uso',
+                        pantalla: const ReportesScreen(),
+                      ),
+                    ),
+                  
+                  const Spacer(),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+      floatingActionButton: FloatingActionButton.large(
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (_) => const IaScreen()),
+          );
+        },
+        backgroundColor: Colors.white,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Image.asset(
+              'assets/images/panda_rojo.png',
+              height: 60,
+              fit: BoxFit.contain,
+            ),
+            const Text(
+              'IA Panda',
+              style: TextStyle(fontSize: 10, color: Color(0xFFC62828), fontWeight: FontWeight.bold),
             ),
           ],
         ),
@@ -97,13 +175,28 @@ class _HomeScreenState extends State<HomeScreen> {
     BuildContext context, {
     required IconData icon,
     required String titulo,
+    required String subtitulo,
     required Widget pantalla,
   }) {
     return Card(
+      elevation: 4,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: ListTile(
-        leading: Icon(icon, size: 35),
-        title: Text(titulo),
-        trailing: const Icon(Icons.arrow_forward_ios),
+        contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+        leading: Container(
+          padding: const EdgeInsets.all(8),
+          decoration: BoxDecoration(
+            color: const Color(0xFFC62828).withOpacity(0.1),
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: Icon(icon, size: 30, color: const Color(0xFFC62828)),
+        ),
+        title: Text(
+          titulo,
+          style: const TextStyle(fontWeight: FontWeight.bold),
+        ),
+        subtitle: Text(subtitulo),
+        trailing: const Icon(Icons.arrow_forward_ios, size: 16, color: Color(0xFFC62828)),
         onTap: () {
           Navigator.push(context, MaterialPageRoute(builder: (_) => pantalla));
         },

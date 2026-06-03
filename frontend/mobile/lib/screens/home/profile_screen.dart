@@ -45,33 +45,74 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Perfil')),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
+      appBar: AppBar(title: const Text('Mi Perfil')),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(24.0),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Center(
-              child: CircleAvatar(
-                radius: 50,
-                child: Icon(Icons.person, size: 50),
+            Center(
+              child: Container(
+                padding: const EdgeInsets.all(4),
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  border: Border.all(color: const Color(0xFFC62828), width: 3),
+                ),
+                child: const CircleAvatar(
+                  radius: 60,
+                  backgroundColor: Color(0xFFF5F5F5),
+                  child: Icon(Icons.person, size: 80, color: Color(0xFFC62828)),
+                ),
               ),
             ),
-            const SizedBox(height: 24),
-            Text('Nombre: $_nombre', style: const TextStyle(fontSize: 18)),
-            const SizedBox(height: 8),
-            Text('Rol: $_rol', style: const TextStyle(fontSize: 18)),
-            const Spacer(),
+            const SizedBox(height: 32),
+            _infoTile(Icons.person, 'Nombre Completo', _nombre),
+            _infoTile(Icons.school, 'Rol Universitario', _rol),
+            const SizedBox(height: 48),
             SizedBox(
               width: double.infinity,
-              child: ElevatedButton(
+              child: OutlinedButton.icon(
                 onPressed: _logout,
-                style: ElevatedButton.styleFrom(backgroundColor: Colors.red, foregroundColor: Colors.white),
-                child: const Text('Cerrar Sesión'),
+                icon: const Icon(Icons.logout),
+                label: const Text('CERRAR SESIÓN'),
+                style: OutlinedButton.styleFrom(
+                  foregroundColor: const Color(0xFFC62828),
+                  side: const BorderSide(color: Color(0xFFC62828)),
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                ),
               ),
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _infoTile(IconData icon, String label, String value) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 16),
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.grey[100],
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Row(
+        children: [
+          Icon(icon, color: const Color(0xFFC62828)),
+          const SizedBox(width: 16),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                label,
+                style: TextStyle(fontSize: 12, color: Colors.grey[600]),
+              ),
+              Text(
+                value,
+                style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }

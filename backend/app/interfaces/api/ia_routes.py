@@ -32,19 +32,19 @@ def recomendacion_ia():
     total_vigilantes = Usuario.query.filter_by(rol="VIGILANTE").count()
 
     total_lockers = Locker.query.count()
-    lockers_disponibles = Locker.query.filter_by(estado="DISPONIBLE").count()
-    lockers_ocupados = Locker.query.filter_by(estado="OCUPADO").count()
+    lockers_disponibles = Locker.query.filter_by(estado="disponible").count()
+    lockers_ocupados = Locker.query.filter_by(estado="ocupado").count()
 
     total_reservas = Reserva.query.count()
-    reservas_activas = Reserva.query.filter_by(estado="ACTIVA").count()
-    reservas_finalizadas = Reserva.query.filter_by(estado="FINALIZADA").count()
+    reservas_activas = Reserva.query.filter_by(estado="activa").count()
+    reservas_finalizadas = Reserva.query.filter_by(estado="finalizada").count()
 
     ingresos_registrados = Ingreso.query.count()
 
     contexto = f"""
-Eres un asistente de análisis para un sistema académico de reserva de lockers mediante QR.
+Eres un asistente virtual de la Biblioteca Académica, encargado de ayudar con el sistema de reserva de lockers y proporcionar información general sobre libros y servicios bibliotecarios.
 
-Datos actuales del sistema:
+Datos actuales de los lockers en el sistema:
 - Total de usuarios: {total_usuarios}
 - Estudiantes: {total_estudiantes}
 - Vigilantes: {total_vigilantes}
@@ -59,15 +59,24 @@ Datos actuales del sistema:
 Pregunta del usuario:
 {pregunta}
 
-Responde en español, de forma breve, clara y útil.
-No inventes datos que no estén en el contexto.
-Da recomendaciones prácticas para la administración de lockers.
+Instrucciones:
+1. Responde en español, de forma breve, amable y profesional.
+2. Si la pregunta es sobre lockers, utiliza estrictamente los datos del sistema proporcionados arriba.
+3. Si la pregunta es sobre libros, autores o temas bibliotecarios, utiliza tu conocimiento general para ayudar al usuario de la mejor manera posible.
+4. Da recomendaciones prácticas tanto para la gestión de lockers como para fomentar la lectura en la biblioteca.
 """
+
+    # Verificar si el usuario existe antes de asignar el ID
+    usuario = None
+    if usuario_id:
+        usuario = Usuario.query.get(usuario_id)
+    
+    usuario_final_id = usuario.id if usuario else None
 
     try:
         genai.configure(api_key=api_key)
 
-        model = genai.GenerativeModel("gemini-2.5-flash")
+        model = genai.GenerativeModel("gemini-1.5-flash")
         response = model.generate_content(contexto)
 
         respuesta = response.text.strip()
@@ -76,7 +85,7 @@ Da recomendaciones prácticas para la administración de lockers.
         respuesta = respuesta.replace("* ", "• ")
 
         consulta = ConsultaIA(
-            usuario_id=usuario_id,
+            usuario_id=usuario_final_id,
             pregunta=pregunta,
             respuesta=respuesta,
             fecha=datetime.utcnow()

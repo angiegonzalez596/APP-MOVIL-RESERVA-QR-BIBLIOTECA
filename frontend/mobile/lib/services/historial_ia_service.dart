@@ -1,11 +1,12 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'api_config.dart';
 
 class HistorialIaService {
-  static const String baseUrl = 'http://127.0.0.1:5000';
+  final String baseUrl = ApiConfig.baseUrl;
 
   Future<List<dynamic>> obtenerHistorial() async {
-    final response = await http.get(Uri.parse('$baseUrl/api/ia/historial'));
+    final response = await http.get(Uri.parse('$baseUrl/ia/historial'));
 
     if (response.statusCode == 200) {
       return jsonDecode(response.body);

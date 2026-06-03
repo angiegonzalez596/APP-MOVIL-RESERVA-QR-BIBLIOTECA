@@ -21,6 +21,7 @@ class Locker(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     numero = db.Column(db.Integer, nullable=False)
     estado = db.Column(db.String(20), default="disponible") # disponible o ocupado
+    codigo_qr = db.Column(db.String(100), unique=True, nullable=True)
     
     reservas = db.relationship('Reserva', backref='locker', lazy=True)
 
@@ -54,3 +55,14 @@ class ConsultaIA(db.Model):
     fecha = db.Column(db.DateTime, default=datetime.utcnow)
 
     usuario = db.relationship('Usuario', backref='consultas_ia')
+
+class AperturaLocker(db.Model):
+    __tablename__ = 'apertura_locker'
+
+    id = db.Column(db.Integer, primary_key=True)
+    usuario_id = db.Column(db.Integer, db.ForeignKey('usuario.id'), nullable=False)
+    locker_id = db.Column(db.Integer, db.ForeignKey('locker.id'), nullable=False)
+    fecha = db.Column(db.DateTime, default=datetime.utcnow)
+
+    usuario = db.relationship('Usuario', backref='aperturas')
+    locker = db.relationship('Locker', backref='aperturas')

@@ -1,11 +1,13 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'api_config.dart';
 
 class ReporteService {
-  static const String baseUrl = 'http://127.0.0.1:5000';
+  final String baseUrl = ApiConfig.baseUrl;
+
 
   Future<Map<String, dynamic>> obtenerResumen() async {
-    final response = await http.get(Uri.parse('$baseUrl/api/reportes/resumen'));
+    final response = await http.get(Uri.parse('$baseUrl/reportes/resumen'));
 
     if (response.statusCode == 200) {
       return jsonDecode(response.body);
