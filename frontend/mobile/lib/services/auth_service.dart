@@ -11,10 +11,7 @@ class AuthService {
       final response = await http.post(
         Uri.parse('$baseUrl/login'),
         headers: {'Content-Type': 'application/json'},
-        body: jsonEncode({
-          'email': email,
-          'password': password,
-        }),
+        body: jsonEncode({'email': email, 'password': password}),
       );
 
       final data = jsonDecode(response.body);
@@ -31,15 +28,11 @@ class AuthService {
 
       return data;
     } catch (e) {
-      return {
-        'error': 'Error de conexión: $e',
-      };
+      return {'error': 'Error de conexión: $e'};
     }
   }
 
-  Future<Map<String, dynamic>> register(
-    Map<String, dynamic> userData,
-  ) async {
+  Future<Map<String, dynamic>> register(Map<String, dynamic> userData) async {
     try {
       final response = await http.post(
         Uri.parse('$baseUrl/register'),
@@ -49,9 +42,7 @@ class AuthService {
 
       return jsonDecode(response.body);
     } catch (e) {
-      return {
-        'error': 'Error de conexión: $e',
-      };
+      return {'error': 'Error de conexión: $e'};
     }
   }
 
@@ -68,5 +59,31 @@ class AuthService {
   Future<bool> isLoggedIn() async {
     final token = await getToken();
     return token != null;
+  }
+
+  Future<Map<String, dynamic>> actualizarPerfil({
+    required int userId,
+    required String nombre,
+    required String email,
+  }) async {
+    try {
+      final response = await http.put(
+        Uri.parse('${ApiConfig.baseUrl}/users/$userId'),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({'nombre': nombre, 'email': email}),
+      );
+
+      final data = jsonDecode(response.body);
+
+      if (response.statusCode == 200) {
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.setString('user_name', data['usuario']['nombre']);
+        await prefs.setString('user_email', data['usuario']['email']);
+      }
+
+      return data;
+    } catch (e) {
+      return {'error': 'Error de conexión: $e'};
+    }
   }
 }

@@ -29,7 +29,7 @@ class Reserva(db.Model):
     __tablename__ = 'reserva'
     id = db.Column(db.Integer, primary_key=True)
     usuario_id = db.Column(db.Integer, db.ForeignKey('usuario.id'), nullable=False) # 💡 OPTIMIZADO: No puede ser nulo
-    locker_id = db.Column(db.Integer, db.ForeignKey('locker.id'), nullable=False)   # 💡 OPTIMIZADO: No puede ser nulo
+    locker_id = db.Column(db.Integer, db.ForeignKey('locker.id'), nullable=True)   # 💡 OPTIMIZADO: Puede ser nulo
     fecha_inicio = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)   # 💡 OPTIMIZADO: Fecha automática al crear
     fecha_fin = db.Column(db.DateTime, nullable=True) # Es nulo hasta que se finaliza la reserva
     estado = db.Column(db.String(20), default="activa") # 💡 OPTIMIZADO: "activa" o "finalizada"
@@ -61,7 +61,7 @@ class AperturaLocker(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     usuario_id = db.Column(db.Integer, db.ForeignKey('usuario.id'), nullable=False)
-    locker_id = db.Column(db.Integer, db.ForeignKey('locker.id'), nullable=False)
+    locker_id = db.Column(db.Integer, db.ForeignKey('locker.id'), nullable=True)
     fecha = db.Column(db.DateTime, default=datetime.utcnow)
 
     usuario = db.relationship('Usuario', backref='aperturas')

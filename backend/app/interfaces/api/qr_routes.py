@@ -62,7 +62,6 @@ def generate_qr():
         }
     }), 201
 
-
 @bp.route("/scan", methods=["POST"])
 def scan_qr():
     data = request.get_json() or {}
@@ -72,15 +71,44 @@ def scan_qr():
 
     if not qr_code or not vigilante_id:
         return jsonify({
+            "acceso": False,
             "error": "qr_code y vigilante_id son obligatorios"
         }), 400
 
-    usuario = Usuario.query.filter_by(qr_code=qr_code).first()
+    if not qr_code.startswith("QR-RESERVA-"):
+        return jsonify({
+            "acceso": False,
+            "error": "Formato de QR inválido"
+        }), 400
+
+    try:
+        reserva_id = int(qr_code.split("-")[2])
+    except Exception:
+        return jsonify({
+            "acceso": False,
+            "error": "No se pudo leer la reserva del QR"
+        }), 400
+
+    reserva = Reserva.query.get(reserva_id)
+
+    if not reserva:
+        return jsonify({
+            "acceso": False,
+            "error": "Reserva no encontrada"
+        }), 404
+
+    if reserva.estado != "activa":
+        return jsonify({
+            "acceso": False,
+            "error": "La reserva no está activa"
+        }), 400
+
+    usuario = Usuario.query.get(reserva.usuario_id)
 
     if not usuario:
         return jsonify({
             "acceso": False,
-            "error": "QR inválido"
+            "error": "Usuario de la reserva no encontrado"
         }), 404
 
     vigilante = Usuario.query.get(vigilante_id)
@@ -90,48 +118,17 @@ def scan_qr():
             "acceso": False,
             "error": "Vigilante no encontrado"
         }), 404
-    
+
     if vigilante.rol != "VIGILANTE":
         return jsonify({
             "acceso": False,
             "error": "El usuario que valida el QR no tiene rol de vigilante"
         }), 403
 
-    reserva = Reserva.query.filter_by(
-        usuario_id=usuario.id,
-        estado="activa"
-    ).first()
-
-    if not reserva:
-        return jsonify({
-            "acceso": False,
-            "error": "El usuario no tiene una reserva activa"
-        }), 403
-
-    locker = Locker.query.get(reserva.locker_id)
-
-    if not locker:
-        return jsonify({
-            "acceso": False,
-            "error": "Locker asociado no encontrado"
-        }), 404
-
-    ingreso = Ingreso(
-        usuario_id=usuario.id,
-        vigilante_id=vigilante.id,
-        fecha_ingreso=datetime.utcnow()
-    )
-
-    db.session.add(ingreso)
-    db.session.commit()
-
     return jsonify({
         "acceso": True,
-        "message": "Acceso validado correctamente",
-        "ingreso": {
-            "id": ingreso.id,
-            "fecha_ingreso": ingreso.fecha_ingreso.isoformat()
-        },
+        "message": "QR validado correctamente",
+        "reserva_id": reserva.id,
         "usuario": {
             "id": usuario.id,
             "nombre": usuario.nombre,
@@ -141,16 +138,12 @@ def scan_qr():
         "reserva": {
             "id": reserva.id,
             "estado": reserva.estado,
+            "locker_id": reserva.locker_id,
             "fecha_inicio": reserva.fecha_inicio.isoformat() if reserva.fecha_inicio else None,
             "fecha_fin": reserva.fecha_fin.isoformat() if reserva.fecha_fin else None
-        },
-        "locker": {
-            "id": locker.id,
-            "numero": locker.numero,
-            "estado": locker.estado
         },
         "vigilante": {
             "id": vigilante.id,
             "nombre": vigilante.nombre
         }
-    }), 201
+    }), 200

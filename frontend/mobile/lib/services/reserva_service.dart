@@ -5,49 +5,59 @@ import 'api_config.dart';
 class ReservaService {
   static String get baseUrl => ApiConfig.baseUrl;
 
-  // Registrar ingreso
-  static Future<bool> registrarIngreso(
-    String reservaId,
-    int lockerId,
-  ) async {
+  static Future<Map<String, dynamic>> crearReserva(int usuarioId) async {
     try {
-      final url = Uri.parse(
-        '$baseUrl/reservas/registrar-ingreso',
-      );
-
       final response = await http.post(
-        url,
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: jsonEncode({
-          'reserva_id': reservaId,
-          'locker_id': lockerId,
-        }),
+        Uri.parse('$baseUrl/reservas/'),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({'usuario_id': usuarioId}),
       );
 
-      if (response.statusCode == 200 ||
-          response.statusCode == 201) {
-        return true;
-      }
-
-      print('Error servidor: ${response.body}');
-      return false;
+      return jsonDecode(response.body);
     } catch (e) {
-      print('Error de red: $e');
+      return {'error': 'Error de conexión: $e'};
+    }
+  }
+
+  static Future<bool> registrarIngreso(String reservaId, int lockerId) async {
+    try {
+      final response = await http.post(
+        Uri.parse('$baseUrl/reservas/registrar-ingreso'),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({'reserva_id': reservaId, 'locker_id': lockerId}),
+      );
+
+      print('STATUS REGISTRAR INGRESO: ${response.statusCode}');
+      print('BODY REGISTRAR INGRESO: ${response.body}');
+
+      return response.statusCode == 200 || response.statusCode == 201;
+    } catch (e) {
+      print('ERROR REGISTRAR INGRESO: $e');
       return false;
     }
   }
 
-  // Registrar salida por QR de Locker
+  static Future<bool> registrarSalida(int lockerId) async {
+    try {
+      final response = await http.put(
+        Uri.parse('$baseUrl/reservas/finalizar-por-locker'),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({'locker_id': lockerId}),
+      );
+
+      return response.statusCode == 200;
+    } catch (e) {
+      return false;
+    }
+  }
+
   static Future<Map<String, dynamic>> finalizarPorLocker(
     String codigoLocker,
     int usuarioId,
   ) async {
     try {
-      final url = Uri.parse('$baseUrl/reservas/finalizar-por-codigo-locker');
       final response = await http.post(
-        url,
+        Uri.parse('$baseUrl/reservas/finalizar-por-codigo-locker'),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({
           'codigo_locker': codigoLocker,
@@ -61,34 +71,37 @@ class ReservaService {
     }
   }
 
-  // Registrar salida
-  static Future<bool> registrarSalida(
-    int lockerId,
-  ) async {
+  static Future<List<dynamic>> obtenerReservasUsuario(int usuarioId) async {
     try {
-      final url = Uri.parse(
-        '$baseUrl/reservas/finalizar-por-locker',
-      );
-
-      final response = await http.put(
-        url,
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: jsonEncode({
-          'locker_id': lockerId,
-        }),
+      final response = await http.get(
+        Uri.parse('$baseUrl/reservas/usuario/$usuarioId'),
+        headers: {'Content-Type': 'application/json'},
       );
 
       if (response.statusCode == 200) {
-        return true;
+        return jsonDecode(response.body);
       }
 
-      print('Error servidor: ${response.body}');
-      return false;
+      return [];
     } catch (e) {
-      print('Error de red: $e');
-      return false;
+      return [];
+    }
+  }
+
+  static Future<List<dynamic>> obtenerReservas() async {
+    try {
+      final response = await http.get(
+        Uri.parse('$baseUrl/reservas/'),
+        headers: {'Content-Type': 'application/json'},
+      );
+
+      if (response.statusCode == 200) {
+        return jsonDecode(response.body);
+      }
+
+      return [];
+    } catch (_) {
+      return [];
     }
   }
 }

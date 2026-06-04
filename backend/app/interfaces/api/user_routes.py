@@ -1,4 +1,5 @@
 from flask import Blueprint, jsonify, request
+from ...extensions import db
 from ...infrastructure.bd.models import Usuario
 
 bp = Blueprint('users', __name__, url_prefix='/api/users')
@@ -42,4 +43,34 @@ def get_user_by_id(id):
         "codigo_estudiante": usuario.codigo_estudiante,
         "rol": usuario.rol,
         "estado": usuario.estado
+    }), 200
+
+@bp.route('/<int:id>', methods=['PUT'])
+def actualizar_usuario(id):
+    data = request.get_json() or {}
+
+    usuario = Usuario.query.get(id)
+
+    if not usuario:
+        return jsonify({"error": "Usuario no encontrado"}), 404
+
+    nombre = data.get("nombre")
+    email = data.get("email")
+
+    if nombre:
+        usuario.nombre = nombre
+
+    if email:
+        usuario.email = email
+
+    db.session.commit()
+
+    return jsonify({
+        "message": "Usuario actualizado correctamente",
+        "usuario": {
+            "id": usuario.id,
+            "nombre": usuario.nombre,
+            "email": usuario.email,
+            "rol": usuario.rol
+        }
     }), 200

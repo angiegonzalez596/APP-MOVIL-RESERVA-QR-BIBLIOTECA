@@ -31,7 +31,7 @@ class ReservaRepository:
         """
         return Reserva.query.filter_by(
             usuario_id=usuario_id, 
-            estado_reserva="activa"
+            estado="activa"
         ).first()
 
     @staticmethod
@@ -40,25 +40,17 @@ class ReservaRepository:
         return Reserva.query.get(reserva_id)
 
     @staticmethod
-    def crear_reserva(usuario_id, locker_id):
+    def crear_reserva(usuario_id):
         """
-        Tarea: Reservar (Parte 1).
-        Crea el registro de la reserva y cambia el estado del locker a 'ocupado'.
+        Crea una reserva activa sin locker asignado.
+        El locker será asignado después por el vigilante.
         """
-        # 1. Buscamos el locker y cambiamos su estado
-        locker = Locker.query.get(locker_id)
-        if not locker or locker.estado != "disponible":
-            return None # El locker no existe o ya no está disponible
-            
-        locker.estado = "ocupado"
-
-        # 2. Creamos la reserva (fecha_inicio se pone automática por el modelo)
         nueva_reserva = Reserva(
             usuario_id=usuario_id,
-            locker_id=locker_id,
+            locker_id=None,
             estado="activa"
         )
-        
+
         db.session.add(nueva_reserva)
         db.session.commit()
         return nueva_reserva

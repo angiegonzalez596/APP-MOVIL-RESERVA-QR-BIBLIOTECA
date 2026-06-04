@@ -30,7 +30,10 @@ class _IaScreenState extends State<IaScreen> {
       final result = await service.consultarIA(controller.text);
 
       setState(() {
-        respuesta = result['respuesta'];
+        respuesta =
+            result['respuesta'] ??
+            result['error'] ??
+            'No se recibió respuesta de la IA';
       });
     } catch (e) {
       setState(() {

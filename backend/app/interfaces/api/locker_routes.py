@@ -24,21 +24,24 @@ def get_lockers():
 # Lockers disponibles
 @bp.route('/disponibles', methods=['GET'])
 def get_lockers_disponibles():
-    # Filtramos directamente en la base de datos los que están "disponible"
-    lockers_libres = Locker.query.filter_by(estado="disponible").all()
-    
-    result = []
-    for locker in lockers_libres:
-        result.append({
-            "id": locker.id,
-            "numero": locker.numero,
-            "estado": locker.estado
-        })
-        
-    return jsonify(result), 200
+    try:
+        lockers_libres = Locker.query.filter_by(estado="disponible").order_by(Locker.numero.asc()).all()
+
+        result = []
+        for locker in lockers_libres:
+            result.append({
+                "id": locker.id,
+                "numero": locker.numero,
+                "estado": locker.estado
+            })
+
+        return jsonify(result), 200
+
+    except Exception as e:
+        print("ERROR EN /lockers/disponibles:", str(e))
+        return jsonify({"error": str(e)}), 500
 
 # Creación de lockers
-# Creación de lockers en locker_routes.py
 @bp.route('/', methods=['POST'])
 def create_locker():
     data = request.get_json() or {}

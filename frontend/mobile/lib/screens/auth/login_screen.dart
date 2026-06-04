@@ -37,8 +37,9 @@ class _LoginScreenState extends State<LoginScreen> {
         _emailController.text.trim(),
         _passwordController.text.trim(),
       );
-      
+
       if (result.containsKey('token')) {
+        final rol = result['usuario']['rol'];
         if (mounted) {
           Navigator.pushReplacement(
             context,
@@ -48,15 +49,17 @@ class _LoginScreenState extends State<LoginScreen> {
       } else {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(result['error'] ?? 'Error al iniciar sesión')),
+            SnackBar(
+              content: Text(result['error'] ?? 'Error al iniciar sesión'),
+            ),
           );
         }
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error de conexión: $e')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Error de conexión: $e')));
       }
     } finally {
       if (mounted) setState(() => _isLoading = false);
@@ -85,7 +88,10 @@ class _LoginScreenState extends State<LoginScreen> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 24,
+                          vertical: 12,
+                        ),
                         decoration: BoxDecoration(
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(20),
@@ -157,11 +163,16 @@ class _LoginScreenState extends State<LoginScreen> {
                             child: ElevatedButton(
                               onPressed: _login,
                               style: ElevatedButton.styleFrom(
-                                padding: const EdgeInsets.symmetric(vertical: 16),
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 16,
+                                ),
                               ),
                               child: const Text(
                                 'INGRESAR',
-                                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
                             ),
                           ),
@@ -170,7 +181,9 @@ class _LoginScreenState extends State<LoginScreen> {
                       onPressed: () {
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => const RegisterScreen()),
+                          MaterialPageRoute(
+                            builder: (context) => const RegisterScreen(),
+                          ),
                         );
                       },
                       child: const Text(

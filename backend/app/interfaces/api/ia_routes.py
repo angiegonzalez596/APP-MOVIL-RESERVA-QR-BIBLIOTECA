@@ -76,7 +76,7 @@ Instrucciones:
     try:
         genai.configure(api_key=api_key)
 
-        model = genai.GenerativeModel("gemini-1.5-flash")
+        model = genai.GenerativeModel("gemini-2.5-flash")
         response = model.generate_content(contexto)
 
         respuesta = response.text.strip()
@@ -122,6 +122,12 @@ Instrucciones:
         }), 201
 
     except Exception as e:
+        import traceback
+
+        print("\n========== ERROR IA ==========")
+        traceback.print_exc()
+        print("==============================\n")
+
         return jsonify({
             "error": "No fue posible generar la recomendación con IA",
             "detalle": str(e)

@@ -2,6 +2,8 @@ from flask import Blueprint, request, jsonify
 from ...use_cases.register_user import RegisterUser
 from ...use_cases.login_user import LoginUser
 from ...use_cases.generate_qr import GenerateQR
+from ...extensions import db
+
 
 bp = Blueprint('auth', __name__, url_prefix='/api/auth')
 
@@ -57,3 +59,33 @@ def login():
     result, status_code = use_case.execute(email, password)
 
     return jsonify(result), status_code
+
+@bp.route('/<int:id>', methods=['PUT'])
+def actualizar_usuario(id):
+    data = request.get_json() or {}
+
+    usuario = Usuario.query.get(id)
+
+    if not usuario:
+        return jsonify({"error": "Usuario no encontrado"}), 404
+
+    nombre = data.get("nombre")
+    email = data.get("email")
+
+    if nombre:
+        usuario.nombre = nombre
+
+    if email:
+        usuario.email = email
+
+    db.session.commit()
+
+    return jsonify({
+        "message": "Usuario actualizado correctamente",
+        "usuario": {
+            "id": usuario.id,
+            "nombre": usuario.nombre,
+            "email": usuario.email,
+            "rol": usuario.rol
+        }
+    }), 200
