@@ -24,9 +24,17 @@ class AuthService {
         await prefs.setString('user_name', data['usuario']['nombre']);
         await prefs.setString('user_email', data['usuario']['email']);
         await prefs.setString('user_rol', data['usuario']['rol']);
+
+        return data;
       }
 
-      return data;
+      if (response.statusCode == 401) {
+        return {'error': 'Correo o contraseña incorrectos'};
+      }
+
+      return {
+        'error': data['error'] ?? data['message'] ?? 'Error al iniciar sesión',
+      };
     } catch (e) {
       return {'error': 'Error de conexión: $e'};
     }

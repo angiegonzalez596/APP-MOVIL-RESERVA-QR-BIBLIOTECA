@@ -83,7 +83,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   // Logo de marca en la parte superior
                   Center(
                     child: Image.asset(
-                      'assets/images/logo_unilibre.png',
+                      'assets/images/unilibre-transp.png',
                       height: 60,
                       fit: BoxFit.contain,
                     ),

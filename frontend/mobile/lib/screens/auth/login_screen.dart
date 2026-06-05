@@ -127,6 +127,12 @@ class _LoginScreenState extends State<LoginScreen> {
                         color: Color(0xFFC62828),
                       ),
                     ),
+                    const SizedBox(height: 8),
+                    const Text(
+                      'Ingresa con tu correo institucional para continuar.',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(fontSize: 14, color: Colors.black54),
+                    ),
                     const SizedBox(height: 32),
                     TextField(
                       controller: _emailController,
